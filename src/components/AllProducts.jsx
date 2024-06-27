@@ -35,7 +35,14 @@ const AllProducts = () => {
     return <h1> Loading ... Please wait ...</h1>;
   }
   if (isDeleted) {
-    return <h1> Item Deleted</h1>;
+    return (
+      <div>
+        <h1> Item Deleted</h1>
+        <button>
+          <a href="/">Back</a>
+        </button>
+      </div>
+    );
   }
   return (
     <div
