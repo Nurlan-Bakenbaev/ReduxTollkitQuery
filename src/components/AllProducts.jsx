@@ -1,22 +1,46 @@
 import { useNavigate } from "react-router";
-import { useGetAllproductsQuery } from "../app/service/dummyData";
+import {
+  useDeleteProductMutation,
+  useGetAllproductsQuery,
+} from "../app/service/dummyData";
 import "../index.css";
 const AllProducts = () => {
   const { data, isError, isLoading } = useGetAllproductsQuery();
+  const [
+    deleteProduct,
+    {
+      isError: isDeleteError,
+      isLoading: isDeleteLoading,
+      isSuccess: isDeleted,
+    },
+  ] = useDeleteProductMutation();
 
   const navigate = useNavigate();
 
   const handleItemClick = (productId) => {
     navigate(`/products/${productId}`);
   };
-  if (isError) {
+
+  const handleDeleteitem = async (itemId) => {
+    try {
+      deleteProduct(itemId).unwrap();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  if (isError || isDeleteError) {
     return <h1>Some error occured</h1>;
   }
-  if (isLoading) {
+  if (isLoading || isDeleteLoading) {
     return <h1> Loading ... Please wait ...</h1>;
   }
+  if (isDeleted) {
+    return <h1> Item Deleted</h1>;
+  }
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems:"center" }}>
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
       <h1>
         <a href="/product/addItem">Add A new Products</a>
       </h1>
@@ -28,11 +52,11 @@ const AllProducts = () => {
             margin: "10px",
             padding: "10px",
           }}
-          onClick={() => handleItemClick(item.id)}
           key={id}
         >
-          <h3>{item.title}</h3>
+          <h3 onClick={() => handleItemClick(item.id)}>{item.title}</h3>
           <p>{item.description}</p>
+          <button onClick={() => handleDeleteitem(item.id)}>Delete</button>
         </div>
       ))}
     </div>
