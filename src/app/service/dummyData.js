@@ -12,16 +12,31 @@ export const productsApi = createApi({
     }),
     addNewProduct: builder.mutation({
       query: (newItem) => ({
-        url: "/product/add",
+        url: "/products/add",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: newItem,
       }),
     }),
+    updatedProduct: builder.mutation({
+      query: ({ id, updatedItem }) => ({
+        url: `/products/${id}`,
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: updatedItem,
+      }),
+    }),
+    deleteProduct: builder.mutation({
+      query: (id) => ({
+        url: `/products/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
-
 export const {
+  useDeleteProductMutation,
+  useUpdatedProductMutation,
   useGetAllproductsQuery,
   useGetProductByIdQuery,
   useAddNewProductMutation,
